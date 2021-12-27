@@ -1,12 +1,20 @@
+const textureLoader = new THREE.TextureLoader();
+const mtlLoader = new THREE.MTLLoader();
+const objLoader = new THREE.OBJLoader();
+const path = '../models/';
+const objFile = '10194_Onion-L3.obj'
+const mtlFile = '10194_Onion-L3.mtl';
+
 const canvas = document.querySelector("#c")
 const scene = new THREE.Scene();
+
 const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true
 })
 
-const WIDTH = window.innerWidth
-const HEIGHT = window.innerHeight
+const WIDTH = window.innerWidth;
+const HEIGHT = window.innerHeight;
 
 renderer.setSize(WIDTH, HEIGHT)
 
@@ -23,13 +31,35 @@ const camera = new THREE.PerspectiveCamera(
 )
 camera.position.set(0, 10, 500);
 
-const RADIUS = 40
-const geometry = new THREE.IcosahedronGeometry(RADIUS, 0);
+// const RADIUS = 40
+// const geometry = new THREE.IcosahedronGeometry(RADIUS, 0);
 
-const material = new THREE.MeshLambertMaterial({ color : "purple" })
+// const material = new THREE.MeshBasicMaterial();
 
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh)
+
+mtlLoader.setPath(path);
+mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
+.load(mtlFile, function(mtl) {
+    mtl.preload();
+
+    objLoader.setPath(path);
+    objLoader.setMaterials(mtl);
+
+    objLoader.load(objFile, function(obj) {
+        obj.traverse( child => {
+            if (child.material) child.material = new THREE.MeshBasicMaterial({
+                map: textureLoader.load('../models/Yellow OnionC.jpg', undefined, undefined, function(err) {
+                    console.log(err);
+                }),
+            });
+        });
+        scene.add( obj );
+    }, undefined, function ( error ) {
+        console.error( error );
+    });
+});
+
+// const mesh = new THREE.Mesh(geometry, material);
 
 const ambientLight = new THREE.AmbientLight(0x404040, 3)
 ambientLight.position.set(100, 100, 100)
@@ -63,9 +93,9 @@ scene.add(gridHelper)
 
 const update = () => {
     const speed = Math.random() / 200
-    mesh.rotation.x += speed
-    mesh.rotation.y += speed
-    mesh.rotation.z += speed
+    // obj.rotation.x += speed
+    // obj.rotation.y += speed
+    // obj.rotation.z += speed
     requestAnimationFrame(update)
     controls.update()
     renderer.render(scene, camera)

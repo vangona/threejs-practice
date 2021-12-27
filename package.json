@@ -1,16 +1,25 @@
 {
-  "name": "icosahedron",
+  "name": "practice_threejs",
   "version": "1.0.0",
-  "description": "",
+  "description": "practice threejs",
   "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "vangona",
   "license": "ISC",
   "dependencies": {
     "three": "^0.131.3",
     "three-orbitcontrols": "^2.110.3"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vangona/threejs_practice.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vangona/threejs_practice/issues"
+  },
+  "homepage": "https://github.com/vangona/threejs_practice#readme"
 }
