@@ -8,6 +8,8 @@ const mtlFile = '10194_Onion-L3.mtl';
 const canvas = document.querySelector("#c")
 const scene = new THREE.Scene();
 
+scene.background = '#c1c1c1';
+
 const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true
@@ -31,11 +33,11 @@ const camera = new THREE.PerspectiveCamera(
 )
 camera.position.set(0, 10, 500);
 
-// const RADIUS = 40
-// const geometry = new THREE.IcosahedronGeometry(RADIUS, 0);
-
-// const material = new THREE.MeshBasicMaterial();
-
+const geometry = new THREE.BoxGeometry( 40, 30, 40 );
+const material = new THREE.MeshBasicMaterial({color: '#c1c1c1'});
+const cube = new THREE.Mesh(geometry, material);
+cube.translateY(15);
+scene.add( cube ); 
 
 mtlLoader.setPath(path);
 mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
@@ -53,29 +55,31 @@ mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
                 }),
             });
         });
+        
+        obj.rotation.x = 10;
+        obj.translateY(-34);
+        obj.translateZ(25);
         scene.add( obj );
     }, undefined, function ( error ) {
         console.error( error );
     });
 });
 
-// const mesh = new THREE.Mesh(geometry, material);
-
-const ambientLight = new THREE.AmbientLight(0x404040, 3)
-ambientLight.position.set(100, 100, 100)
-scene.add(ambientLight)
+// const ambientLight = new THREE.AmbientLight(0x404040, 3)
+// ambientLight.position.set(100, 100, 100)
+// scene.add(ambientLight)
 
 const pointLight = new THREE.PointLight(0xffffff, 2)
-pointLight.position.set(100, 100, 100)
+pointLight.position.set(50, 50, 50)
 scene.add(pointLight)
 
-const pointLight2 = new THREE.PointLight(0xffffff, 2)
-pointLight.position.set(-100, -100, -100)
-scene.add(pointLight2)
+// const pointLight2 = new THREE.PointLight(0xffffff, 2)
+// pointLight.position.set(-100, -100, -100)
+// scene.add(pointLight2)
 
-const pointLight3 = new THREE.PointLight(0xffffff, 2)
-pointLight.position.set(-100, -100, -100)
-scene.add(pointLight3)
+// const pointLight3 = new THREE.PointLight(0xffffff, 2)
+// pointLight.position.set(-100, -100, -100)
+// scene.add(pointLight3)
 
 const controls = new THREE.OrbitControls(camera, canvas);
 controls.mouseButtons = {
