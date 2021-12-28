@@ -7,8 +7,7 @@ const mtlFile = '10194_Onion-L3.mtl';
 
 const canvas = document.querySelector("#c")
 const scene = new THREE.Scene();
-
-scene.background = '#c1c1c1';
+scene.background = new THREE.Color('gray');
 
 const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -31,14 +30,48 @@ const camera = new THREE.PerspectiveCamera(
     NEAR,
     FAR
 )
-camera.position.set(0, 10, 500);
+camera.position.set(200, 300, 300);
 
-const geometry = new THREE.BoxGeometry( 40, 30, 40 );
-const material = new THREE.MeshBasicMaterial({color: '#c1c1c1'});
-const cube = new THREE.Mesh(geometry, material);
+
+// 원뿔
+const cylinderGeometry = new THREE.CylinderGeometry(20, 15, 30, 90);
+const cylinderMaterial = new THREE.MeshBasicMaterial({
+    map: textureLoader.load('../models/marble.jpg', undefined, undefined, function(err) {
+    console.log(err);
+}),
+});
+const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+cylinder.rotateOnAxis
+cylinder.rotateX(Math.PI);
+cylinder.translateY(-15);
+scene.add( cylinder ); 
+
+// 단상
+const cubeGeometry = new THREE.BoxGeometry( 40, 30, 40 );
+const cubeMaterial = new THREE.MeshBasicMaterial({
+        map: textureLoader.load('../models/marble.jpg', undefined, undefined, function(err) {
+        console.log(err);
+    }),
+});
+const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 cube.translateY(15);
-scene.add( cube ); 
+// scene.add( cube ); 
 
+
+// 종이
+const planeGeometry = new THREE.PlaneGeometry( 30, 50, 30);
+const planeMaterial = new THREE.MeshBasicMaterial({
+                map: textureLoader.load('../models/onion.png', undefined, undefined, function(err) {
+                    console.log(err);
+                }),
+            });
+const paper = new THREE.Mesh(planeGeometry, planeMaterial);
+paper.translateY(30);
+paper.translateZ(50);
+paper.rotateX(50);
+scene.add(paper);
+
+// 양파
 mtlLoader.setPath(path);
 mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
 .load(mtlFile, function(mtl) {
@@ -65,12 +98,16 @@ mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
     });
 });
 
-// const ambientLight = new THREE.AmbientLight(0x404040, 3)
+
+//빛
+
+// const ambientLight = new THREE.AmbientLight('#000000', 10)
 // ambientLight.position.set(100, 100, 100)
 // scene.add(ambientLight)
 
-const pointLight = new THREE.PointLight(0xffffff, 2)
-pointLight.position.set(50, 50, 50)
+const pointLight = new THREE.SpotLight('#000000', 10)
+pointLight.castShadow = true;
+pointLight.position.set(100, 300, 200)
 scene.add(pointLight)
 
 // const pointLight2 = new THREE.PointLight(0xffffff, 2)
@@ -81,6 +118,7 @@ scene.add(pointLight)
 // pointLight.position.set(-100, -100, -100)
 // scene.add(pointLight3)
 
+// 컨트롤
 const controls = new THREE.OrbitControls(camera, canvas);
 controls.mouseButtons = {
     LEFT: THREE.MOUSE.ROTATE,
@@ -97,9 +135,9 @@ scene.add(gridHelper)
 
 const update = () => {
     const speed = Math.random() / 200
-    // obj.rotation.x += speed
-    // obj.rotation.y += speed
-    // obj.rotation.z += speed
+    // scene.rotation.x += speed
+    // scene.rotation.y += speed
+    // scene.rotation.z += speed
     requestAnimationFrame(update)
     controls.update()
     renderer.render(scene, camera)
