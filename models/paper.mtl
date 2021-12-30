@@ -1,0 +1,17 @@
+newmtl 평면 재질 Layer Stack
+illum 7
+Kd 0.815686 0.815686 0.815686
+adobe_interior_color 1 1 1
+Ni 1.6
+adobe_density 0
+Tr 0
+d 1
+Ka 0 0 0
+Ke 0 0 0
+map_Pm onion/평면 재질 Layer Stack_metallic.png
+adobe_map_translucence onion/평면 재질 Layer Stack_translucence.png
+map_Pr onion/평면 재질 Layer Stack_roughness.png
+Ns 16
+Ks 1 1 1
+adobe_glow 0
+map_Kd onion/평면 재질 Layer Stack_baseColor.png

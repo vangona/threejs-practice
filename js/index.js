@@ -7,7 +7,7 @@ const mtlFile = '10194_Onion-L3.mtl';
 
 const canvas = document.querySelector("#c")
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('gray');
+scene.background = new THREE.Color('black');
 
 const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -34,8 +34,8 @@ camera.position.set(200, 300, 300);
 
 
 // 원뿔
-const cylinderGeometry = new THREE.CylinderGeometry(20, 15, 30, 90);
-const cylinderMaterial = new THREE.MeshBasicMaterial({
+const cylinderGeometry = new THREE.CylinderGeometry(30, 20, 30, 90);
+const cylinderMaterial = new THREE.MeshLambertMaterial({
     map: textureLoader.load('../models/marble.jpg', undefined, undefined, function(err) {
     console.log(err);
 }),
@@ -46,28 +46,17 @@ cylinder.rotateX(Math.PI);
 cylinder.translateY(-15);
 scene.add( cylinder ); 
 
-// 단상
-const cubeGeometry = new THREE.BoxGeometry( 40, 30, 40 );
-const cubeMaterial = new THREE.MeshBasicMaterial({
-        map: textureLoader.load('../models/marble.jpg', undefined, undefined, function(err) {
-        console.log(err);
-    }),
-});
-const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-cube.translateY(15);
-// scene.add( cube ); 
-
 
 // 종이
-const planeGeometry = new THREE.PlaneGeometry( 30, 50, 30);
-const planeMaterial = new THREE.MeshBasicMaterial({
+const planeGeometry = new THREE.PlaneGeometry( 50, 80, 50);
+const planeMaterial = new THREE.MeshLambertMaterial({
                 map: textureLoader.load('../models/onion.png', undefined, undefined, function(err) {
                     console.log(err);
                 }),
             });
 const paper = new THREE.Mesh(planeGeometry, planeMaterial);
-paper.translateY(30);
-paper.translateZ(50);
+paper.translateY(50);
+paper.translateZ(70);
 paper.rotateX(50);
 scene.add(paper);
 
@@ -82,7 +71,7 @@ mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
 
     objLoader.load(objFile, function(obj) {
         obj.traverse( child => {
-            if (child.material) child.material = new THREE.MeshBasicMaterial({
+            if (child.material) child.material = new THREE.MeshLambertMaterial({
                 map: textureLoader.load('../models/Yellow OnionC.jpg', undefined, undefined, function(err) {
                     console.log(err);
                 }),
@@ -90,9 +79,21 @@ mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
         });
         
         obj.rotation.x = 10;
-        obj.translateY(-34);
-        obj.translateZ(25);
+        obj.translateY(-40);
+        obj.translateZ(28);
         scene.add( obj );
+
+        const update = () => {
+            const speed = Math.random() / 200
+            obj.rotation.x += speed
+            obj.rotation.y += speed
+            obj.rotation.z += speed
+            requestAnimationFrame(update)
+            controls.update()
+            renderer.render(scene, camera)
+        }
+        
+        requestAnimationFrame(update)
     }, undefined, function ( error ) {
         console.error( error );
     });
@@ -101,13 +102,18 @@ mtlLoader.setMaterialOptions({side: THREE.DoubleSide})
 
 //빛
 
+const directLight = new THREE.DirectionalLight(0xffffff, 1);
+directLight.castShadow = true;
+directLight.position.set(0, 10, 100);
+scene.add(directLight);
+
 // const ambientLight = new THREE.AmbientLight('#000000', 10)
 // ambientLight.position.set(100, 100, 100)
 // scene.add(ambientLight)
 
-const pointLight = new THREE.SpotLight('#000000', 10)
+const pointLight = new THREE.SpotLight(0xffffff, 1)
 pointLight.castShadow = true;
-pointLight.position.set(100, 300, 200)
+pointLight.position.set(20, 120, -20)
 scene.add(pointLight)
 
 // const pointLight2 = new THREE.PointLight(0xffffff, 2)
@@ -133,14 +139,17 @@ scene.add(axesHelper)
 const gridHelper = new THREE.GridHelper(1000, 10);
 scene.add(gridHelper)
 
-const update = () => {
-    const speed = Math.random() / 200
-    // scene.rotation.x += speed
-    // scene.rotation.y += speed
-    // scene.rotation.z += speed
-    requestAnimationFrame(update)
-    controls.update()
-    renderer.render(scene, camera)
-}
+// const update = () => {
+//     const speed = Math.random() / 200
+//     requestAnimationFrame(update)
+//     controls.update()
+//     renderer.render(scene, camera)
+// }
 
-requestAnimationFrame(update)
+// requestAnimationFrame(update)
+
+function onPaperClick(e) {
+    e.preventDefault();
+
+    console.log(camera.position);
+}
